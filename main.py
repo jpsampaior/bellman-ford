@@ -1,6 +1,7 @@
-from weight_matrix import WeightMatrix
+from bellman_ford import BellmanFord
 
 
+# Função para ler os dados do arquivo
 def read_data(filename):
     data = []
     with open(filename, "r") as file:
@@ -10,6 +11,7 @@ def read_data(filename):
     return data
 
 
+# Função para criar a lista de vértices
 def create_vertexes(number):
     vertexes = []
     for i in range(number):
@@ -18,20 +20,20 @@ def create_vertexes(number):
 
 
 if __name__ == '__main__':
-    graph_input = read_data("input.txt")
+    graph_input = read_data("input2.txt")
     num_vertexes = int(graph_input[0][0])
     vertexes = create_vertexes(num_vertexes)
 
     edges = []
-    edges_weight = []
 
     for edge_info in graph_input[1:]:
-        edge = [int(edge_info[0]), int(edge_info[1])]
+        origin = int(edge_info[0])
+        destiny = int(edge_info[1])
         weight = int(edge_info[2])
-        edges.append(edge)
-        edges_weight.append(weight)
+        edges.append((origin, destiny, weight))
 
-    graph = WeightMatrix(vertexes, edges, edges_weight).graph
+    bf = BellmanFord(edges, vertexes)
+    start_vertex = 1
+    result = bf.bellman_ford(start_vertex)
 
-    for row in graph:
-        print(' '.join(map(str, row)))
+    bf.print_paths(start_vertex)
