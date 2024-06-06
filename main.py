@@ -25,7 +25,7 @@ def letter_to_int(letra, letter_to_int_dict):
 
 
 if __name__ == '__main__':
-    input_num = input("Selecione qual input você quer (1 ou 2)")
+    input_num = input("Select which graph you want (1 ou 2) ")
     if input_num.strip() == '1':
         graph_input = read_data("inputOriginal.txt")
         letter_to_int_dict = Consts.letter_to_int_dict_case1
@@ -62,7 +62,8 @@ if __name__ == '__main__':
         edges.append((origin, destiny, weight))
 
     bf = BellmanFord(edges, vertexes, int_to_letter_dict)
-    start_vertex = input("Defina o vertice de partida")
+    start_vertex = input("Select the starting vertex ")
+    print()
     start_vertex = letter_to_int(start_vertex.strip(), letter_to_int_dict)
 
     result = bf.bellman_ford(start_vertex)
