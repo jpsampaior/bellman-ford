@@ -5,6 +5,7 @@ class BellmanFord:
         self.int_to_letter_dict = int_to_letter_dict
         self.distances = []
         self.parents = []
+        self.negative_cycle_nodes = set()
 
     def initialize_single_source_vertex(self, start):
         self.distances = [float('inf')] * len(self.vertexes)
@@ -26,10 +27,18 @@ class BellmanFord:
 
         for (u, v, w) in self.edges:
             if self.distances[v - 1] > self.distances[u - 1] + w:
-                print(f"Negative cycle detected via edge ({self.int_to_letter(v)}, {self.int_to_letter(u)})")
-                return False
+                self.mark_negative_cycle(v)
 
-        return True
+    def mark_negative_cycle(self, node):
+        if node not in self.negative_cycle_nodes:
+            stack = [node]
+            while stack:
+                current = stack.pop()
+                if current not in self.negative_cycle_nodes:
+                    self.negative_cycle_nodes.add(current)
+                    for (u, v, w) in self.edges:
+                        if u == current and v not in self.negative_cycle_nodes:
+                            stack.append(v)
 
     def get_path(self, start, end):
         path = []
@@ -47,7 +56,9 @@ class BellmanFord:
 
     def print_paths(self, start):
         for vertex in self.vertexes:
-            if vertex != start:
+            if vertex in self.negative_cycle_nodes:
+                print(f"Vertex {self.int_to_letter(vertex)} cannot be accessed due to a negative cycle")
+            elif vertex != start:
                 path = self.get_path(start, vertex)
                 if self.distances[vertex - 1] == float('inf'):
                     print(f"Path from {self.int_to_letter(start)} to {self.int_to_letter(vertex)}: No path")
